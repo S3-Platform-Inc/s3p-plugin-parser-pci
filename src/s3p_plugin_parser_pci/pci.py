@@ -1,5 +1,5 @@
 import os
-import datetime
+from datetime import datetime
 import time
 from dateutil.parser import parse
 from s3p_sdk.plugin.payloads.parsers import S3PParserBase
