@@ -13,7 +13,7 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.ie.webdriver import WebDriver
 
 from tests.config.fixtures import fix_plugin_config, project_config
-from tests.payload.fixtures import execute_timeout
+# from tests.payload.fixtures import execute_timeout
 from s3p_sdk.types import S3PRefer, S3PDocument, S3PPlugin
 from s3p_sdk.plugin.types import SOURCE
 
@@ -25,7 +25,7 @@ class TestPayloadRun:
     def chrome_driver(self) -> WebDriver:
         options = webdriver.Options()
 
-        options.add_argument('--headless')
+        # options.add_argument('--headless')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
         options.add_argument('window-size=1920x1080')
@@ -44,7 +44,7 @@ class TestPayloadRun:
 
     @pytest.fixture(scope="module", autouse=True)
     def fix_payload(self, project_config, fix_plugin_config) -> Type[S3PParserBase]:
-        MODULE_NAME: str = 's3p_test_plugin_payload'
+        MODULE_NAME: str = 's3p_plugin_parser_pci'
         """Загружает конфигурацию из config.py файла по динамическому пути на основании конфигурации"""
         payload_path = Path(project_config.root) / 'src' / project_config.name / fix_plugin_config.payload.file
         assert os.path.exists(payload_path)
@@ -63,11 +63,11 @@ class TestPayloadRun:
     def run_payload(self, payload: Type[S3PParserBase], _plugin: S3PPlugin, driver: WebDriver, refer: S3PRefer, max_document: int,
                     timeout: int = 2):
         # !WARNING Требуется изменить путь до актуального парсера плагина
-        from src.s3_platform_plugin_template.template_payload import MyTemplateParser
-        if isinstance(payload, type(MyTemplateParser)):
+        from src.s3p_plugin_parser_pci.pci import PCI
+        if isinstance(payload, type(PCI)):
             _payload = payload(refer=refer, plugin=_plugin, web_driver=driver, max_count_documents=max_document, last_document=None)
 
-            @execute_timeout(timeout)
+            # @execute_timeout(timeout)
             def execute() -> tuple[S3PDocument, ...]:
                 return _payload.content()
 
